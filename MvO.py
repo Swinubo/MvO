@@ -26,7 +26,7 @@ Ball = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Ba
 ExitDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Exit.png"))).convert(), SMALL_IMAGE_SIZE) #Loads exit
 ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Reset.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads exit
 
-def DisplScrn(O_X, O_Y, Indirection):
+def DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
     scrn.fill(GREEN)
     pygame.draw.rect(scrn, BLACK, pygame.Rect(50, 150, 300, 700))
     pygame.draw.rect(scrn, GREEN, pygame.Rect(60, 160, 280, 680))
@@ -40,7 +40,8 @@ def DisplScrn(O_X, O_Y, Indirection):
     pygame.draw.circle(scrn, GREEN, (960, 500), 140)
     pygame.draw.rect(scrn, BLACK, pygame.Rect(960, 0, 10, 1500))
     scrn.blit(M, (M_X, M_Y))
-    O_X, O_Y, Indirection = CheckODirection(O_X, O_Y, Indirection)
+#    if (OutOLeft == True) or (OutORight == True) or (OutOUp == True) or (OutODown == True):
+#        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
     scrn.blit(O, (O_X, O_Y))
     scrn.blit(Ball, (BallX, BallY))
     scrn.blit(ExitDispl, (1870, 0))
@@ -48,7 +49,7 @@ def DisplScrn(O_X, O_Y, Indirection):
     scrn.blit(font.render(str(MScore), True, BLACK),(800, 0))
     scrn.blit(font.render(str(OScore), True, BLACK),(1100, 0))
     pygame.display.flip()
-    return O_X, O_Y, Indirection
+    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown
 
 def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
     if BallX < 100:
@@ -59,46 +60,19 @@ def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
         M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
     return MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY
 
-def CheckODirection(O_X, O_Y, Indirection):
-    if Indirection == False:
+def CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
+    if (OutOLeft== True) and (OutORight== True) and (OutOUp== True) and (OutODown== True):
         DirectionsList = ['Left', 'Right', 'Up', 'Down']
         direction = random.choice(DirectionsList)
         if direction == 'Left':
-            Indirection = 'Left'
+            OutOLeft = False
         elif direction == 'Right':
-            O_X += 20
-            Indirection = 'Right'
+            OutORight = False
         elif direction == 'Up':
-            O_Y -= 20
-            Indirection = 'Up'
+            OutOUp = False
         elif direction == 'Down':
-            O_Y += 20
-            Indirection = 'Down'
-    elif Indirection == 'Left':
-        OutOLeft = False
-        while OutOLeft == False:
-            O_X -= 20
-            if O_X == 0:
-                OutOLeft = True
-    elif Indirection == 'Right':
-        OutORight = False
-        while OutORight == False:
-            O_X -= 20
-            if O_X == 0:
-                OutORight = True
-    elif Indirection == 'Up':
-        OutOUp = False
-        while OutOUp == False:
-            O_Y -= 20
-            if O_Y == 0:
-                OutOUp = True
-    elif Indirection == 'Down':
-        OutODown = False
-        while OutODown == False:
-            O_Y -= 20
-            if O_Y == 0:
-                OutODown = True
-    return O_X, O_Y, Indirection
+            OutODown = False
+    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown
 
             
 
@@ -106,13 +80,34 @@ font = pygame.font.SysFont('Comic Sans M',  150)
 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
 FPS = 60
 MScore, OScore = 0, 0
-Indirection = False
+OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 clock = pygame.time.Clock()
 done = False
 
 while not done:
+    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+    if OutOLeft == False:
+        O_X -= 20
+        if O_X < 0:
+            O_X = 0
+            OutOLeft = True
+    elif OutORight == False:
+        O_X += 20
+        if O_X > 1720:
+            O_X = 1720
+            OutORight = True
+    elif OutOUp == False:
+        O_Y -= 20
+        if O_Y < 0:
+            O_Y = 0
+            OutOUp = True
+    elif OutODown == False:
+        O_Y += 20
+        if O_Y > 920:
+            O_Y = 920
+            OutODown = True
+    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
     for event in pygame.event.get():
-        O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -134,7 +129,7 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX -= 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                    O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)
+                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_LEFT:
@@ -149,7 +144,7 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX += 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                    O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)
+                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_RIGHT:
@@ -163,7 +158,7 @@ while not done:
                         M_Y = 0
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY -= 20
-                    O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)
+                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_UP:
@@ -177,7 +172,7 @@ while not done:
                         M_Y = 980
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY += 20
-                    O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)
+                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_DOWN:
@@ -201,7 +196,7 @@ while not done:
                         OutShot = True
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
-                        O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)     
+                        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)     
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
@@ -230,7 +225,7 @@ while not done:
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
                         BallY = K/BallX
-                        O_X, O_Y, Indirection = DisplScrn(O_X, O_Y, Indirection)     
+                        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)     
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
