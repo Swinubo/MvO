@@ -101,6 +101,9 @@ while not done:
 
     if OutOLeft == False:
         O_X -= 20
+        if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
+            BallX -= 20
+            MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
         if O_X < 0:
             O_X = 0
             OutOLeft = True
@@ -109,6 +112,9 @@ while not done:
             OutOLeft = True
     elif OutORight == False:
         O_X += 20
+        if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
+            BallX += 20
+            MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
         if O_X > 1820:
             O_X = 1820
             OutORight = True
@@ -117,6 +123,8 @@ while not done:
             OutORight = True
     elif OutOUp == False:
         O_Y -= 20
+        if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
+            BallY -= 20
         if O_Y < 0:
             O_Y = 0
             OutOUp = True
@@ -125,6 +133,8 @@ while not done:
             OutOUp = True
     elif OutODown == False:
         O_Y += 20
+        if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
+            BallY += 20
         if O_Y > 920:
             O_Y = 920
             OutODown = True
