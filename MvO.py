@@ -40,8 +40,6 @@ def DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
     pygame.draw.circle(scrn, GREEN, (960, 500), 140)
     pygame.draw.rect(scrn, BLACK, pygame.Rect(960, 0, 10, 1500))
     scrn.blit(M, (M_X, M_Y))
-#    if (OutOLeft == True) or (OutORight == True) or (OutOUp == True) or (OutODown == True):
-#        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
     scrn.blit(O, (O_X, O_Y))
     scrn.blit(Ball, (BallX, BallY))
     scrn.blit(ExitDispl, (1870, 0))
@@ -66,47 +64,58 @@ def CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
         direction = random.choice(DirectionsList)
         if direction == 'Left':
             OutOLeft = False
+            InitPos = O_X
         elif direction == 'Right':
             OutORight = False
+            InitPos = O_X
         elif direction == 'Up':
             OutOUp = False
+            InitPos = O_Y
         elif direction == 'Down':
             OutODown = False
-    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown
-
-            
+            InitPos = O_Y
+    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, InitPos          
 
 font = pygame.font.SysFont('Comic Sans M',  150)
-M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
+M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 400, 400, 940, 480
 FPS = 60
 MScore, OScore = 0, 0
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 clock = pygame.time.Clock()
 done = False
 
+randomlist = []
+for i in range(0, 100):
+    num = random.randint(0, 1000)
+    num = divrounder.divround(num, 20)
+    randomlist.append(num)
+
 while not done:
-    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, InitPos = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+    RandLimit = randomlist[random.randint(0, 99)]
     if OutOLeft == False:
         O_X -= 20
-        if O_X < 0:
-            O_X = 0
+        if O_X < InitPos + RandLimit:
+            O_X = divrounder.divround(O_X, 20)
             OutOLeft = True
     elif OutORight == False:
         O_X += 20
-        if O_X > 1720:
-            O_X = 1720
+        if O_X > InitPos - RandLimit:
+            O_X = divrounder.divround(O_X, 20)
             OutORight = True
     elif OutOUp == False:
         O_Y -= 20
-        if O_Y < 0:
-            O_Y = 0
+        if O_Y < InitPos + RandLimit:
+            O_Y = divrounder.divround(O_Y, 20)
             OutOUp = True
     elif OutODown == False:
         O_Y += 20
-        if O_Y > 920:
-            O_Y = 920
+        if O_Y > InitPos - RandLimit:
+            O_Y = divrounder.divround(O_Y, 20)
             OutODown = True
+
     O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
