@@ -26,7 +26,7 @@ Ball = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Ba
 ExitDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Exit.png"))).convert(), SMALL_IMAGE_SIZE) #Loads exit
 ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Reset.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads exit
 
-def DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
+def DisplScrn():
     scrn.fill(GREEN)
     pygame.draw.rect(scrn, BLACK, pygame.Rect(50, 150, 300, 700))
     pygame.draw.rect(scrn, GREEN, pygame.Rect(60, 160, 280, 680))
@@ -47,7 +47,6 @@ def DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
     scrn.blit(font.render(str(MScore), True, BLACK),(800, 0))
     scrn.blit(font.render(str(OScore), True, BLACK),(1100, 0))
     pygame.display.flip()
-    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown
 
 def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
     if BallX < 100:
@@ -64,17 +63,21 @@ def CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
         direction = random.choice(DirectionsList)
         if direction == 'Left':
             OutOLeft = False
-            InitPos = O_X
         elif direction == 'Right':
             OutORight = False
-            InitPos = O_X
         elif direction == 'Up':
             OutOUp = False
-            InitPos = O_Y
         elif direction == 'Down':
             OutODown = False
-            InitPos = O_Y
-    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, InitPos          
+    return O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown
+
+def RandListGenerator(AmountOfNumbers, Min, Max):
+    randomlist = []
+    for i in range(0, AmountOfNumbers):
+        num = random.randint(Min, Max)
+        num = divrounder.divround(num, 20)
+        randomlist.append(num)
+    return randomlist
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 400, 400, 940, 480
@@ -84,37 +87,52 @@ OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 clock = pygame.time.Clock()
 done = False
 
-randomlist = []
-for i in range(0, 100):
-    num = random.randint(0, 1000)
-    num = divrounder.divround(num, 20)
-    randomlist.append(num)
+randomlistleft = RandListGenerator(100, -1000, 1000)
+randomlistright = RandListGenerator(100, 1000, 1820)
+randomlistup = RandListGenerator(100, 0, 500)
+randomlistdown = RandListGenerator(100, 500, 1020)
 
 while not done:
-    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, InitPos = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
-    RandLimit = randomlist[random.randint(0, 99)]
+    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+    RandLimitLeft = randomlistleft[random.randint(0, 99)]
+    RandLimitRight = randomlistright[random.randint(0, 99)]
+    RandLimitUp = randomlistup[random.randint(0, 99)]
+    RandLimitDown = randomlistdown[random.randint(0, 99)]
+
     if OutOLeft == False:
         O_X -= 20
-        if O_X < InitPos + RandLimit:
+        if O_X < 0:
+            O_X = 0
+            OutOLeft = True
+        if O_X < RandLimitLeft:
             O_X = divrounder.divround(O_X, 20)
             OutOLeft = True
     elif OutORight == False:
         O_X += 20
-        if O_X > InitPos - RandLimit:
+        if O_X > 1820:
+            O_X = 1820
+            OutORight = True
+        if O_X > RandLimitRight:
             O_X = divrounder.divround(O_X, 20)
             OutORight = True
     elif OutOUp == False:
         O_Y -= 20
-        if O_Y < InitPos + RandLimit:
+        if O_Y < 0:
+            O_Y = 0
+            OutOUp = True
+        if O_Y < RandLimitUp:
             O_Y = divrounder.divround(O_Y, 20)
             OutOUp = True
     elif OutODown == False:
         O_Y += 20
-        if O_Y > InitPos - RandLimit:
+        if O_Y > 920:
+            O_Y = 920
+            OutODown = True
+        if O_Y > RandLimitDown:
             O_Y = divrounder.divround(O_Y, 20)
             OutODown = True
 
-    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+    DisplScrn()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -138,7 +156,7 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX -= 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+                    DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_LEFT:
@@ -153,7 +171,7 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX += 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+                    DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_RIGHT:
@@ -167,7 +185,7 @@ while not done:
                         M_Y = 0
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY -= 20
-                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+                    DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_UP:
@@ -181,7 +199,7 @@ while not done:
                         M_Y = 980
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY += 20
-                    O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
+                    DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
                             if event.key == pygame.K_DOWN:
@@ -205,7 +223,7 @@ while not done:
                         OutShot = True
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
-                        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)     
+                        DisplScrn()     
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
@@ -234,7 +252,7 @@ while not done:
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
                         BallY = K/BallX
-                        O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = DisplScrn(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)     
+                        DisplScrn()     
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
