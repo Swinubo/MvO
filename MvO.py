@@ -79,20 +79,7 @@ def RandListGenerator(AmountOfNumbers, Min, Max):
         randomlist.append(num)
     return randomlist
 
-font = pygame.font.SysFont('Comic Sans M',  150)
-M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 400, 400, 940, 480
-FPS = 60
-MScore, OScore = 0, 0
-OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
-clock = pygame.time.Clock()
-done = False
-
-randomlistleft = RandListGenerator(100, -1000, 1000)
-randomlistright = RandListGenerator(100, 1000, 1820)
-randomlistup = RandListGenerator(100, 0, 500)
-randomlistdown = RandListGenerator(100, 500, 1020)
-
-while not done:
+def PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore):
     O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown = CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown)
     RandLimitLeft = randomlistleft[random.randint(0, 99)]
     RandLimitRight = randomlistright[random.randint(0, 99)]
@@ -141,6 +128,25 @@ while not done:
         if O_Y > RandLimitDown:
             O_Y = divrounder.divround(O_Y, 20)
             OutODown = True
+    return M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore
+
+font = pygame.font.SysFont('Comic Sans M',  150)
+M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 400, 400, 940, 480
+FPS = 60
+MScore, OScore = 0, 0
+OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
+clock = pygame.time.Clock()
+done = False
+
+randomlistleft = RandListGenerator(100, -1000, 1000)
+randomlistright = RandListGenerator(100, 1000, 1820)
+randomlistup = RandListGenerator(100, 0, 500)
+randomlistdown = RandListGenerator(100, 500, 1020)
+
+while not done:
+
+    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
 
     DisplScrn()
 
@@ -166,6 +172,8 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX -= 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                        MScore, OScore)
                     DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
@@ -181,6 +189,8 @@ while not done:
                     if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                         BallX += 20
                         MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
                     DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
@@ -195,6 +205,8 @@ while not done:
                         M_Y = 0
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY -= 20
+                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                        MScore, OScore)
                     DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
@@ -209,6 +221,8 @@ while not done:
                         M_Y = 980
                     if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
                         BallY += 20
+                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
                     DisplScrn()
                     for event in pygame.event.get():
                         if event.type == pygame.KEYUP:
@@ -221,6 +235,9 @@ while not done:
                     SecondsPassed = 0
                     while Powering == True:
                         SecondsPassed += 1/FPS
+                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
+                        DisplScrn()
                         for event in pygame.event.get():
                             if event.type == pygame.KEYUP:
                                 if event.key == pygame.K_SPACE:
@@ -233,7 +250,9 @@ while not done:
                         OutShot = True
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
-                        DisplScrn()     
+                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
+                        DisplScrn()
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
@@ -245,6 +264,9 @@ while not done:
                     SecondsPassed = 0
                     while Powering == True:
                         SecondsPassed += 1/FPS
+                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
+                        DisplScrn()
                         for event in pygame.event.get():
                             if event.type == pygame.KEYUP:
                                 if event.key == pygame.K_SPACE:
@@ -262,7 +284,9 @@ while not done:
                     while OutShot == False:
                         BallX += 27 * SecondsPassed
                         BallY = K/BallX
-                        DisplScrn()     
+                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                           MScore, OScore)
+                        DisplScrn()
                         clock.tick(FPS)
                         if BallX > RandomLimit:
                             OutShot = True
