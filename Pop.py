@@ -1,14 +1,11 @@
-def popper():
+def popper(FREQUENCY, LENGTH): #Hz, waves per second, seconds to play sound
     import math        #import needed modules
     import pyaudio     #sudo apt-get install python-pyaudio
 
     PyAudio = pyaudio.PyAudio     #initialize pyaudio
 
     #See https://en.wikipedia.org/wiki/Bit_rate#Audio
-    BITRATE = 80000    #number of frames per second/frameset.      
-
-    FREQUENCY = 900     #Hz, waves per second, 261.63=C4-note.
-    LENGTH = 0.05     #seconds to play sound
+    BITRATE = 80000    #number of frames per second/frameset.
 
     BITRATE = max(BITRATE, FREQUENCY+100)
 

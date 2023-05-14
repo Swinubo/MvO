@@ -169,14 +169,14 @@ while not done:
             # Set the x, y postions of the mouse click
             x, y = event.pos
             if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
-                Pop.popper()
+                Pop.popper(900, 0.025)
                 pygame.quit()
                 quit()
             elif ((x < 1850) and (x > 1800) and (y < 50) and (y > 0)):
-                Pop.popper()
+                Pop.popper(900, 0.025)
                 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
             elif ((x < 550) and (x > 500) and (y < 150) and (y > 100)):
-                Pop.popper()
+                Pop.popper(900, 0.025)
                 try:
                     ImagePath = askopenfilename()
                     if ImagePath != '':
@@ -184,7 +184,7 @@ while not done:
                 except pygame.error:
                     easygui.msgbox("Unsupported image format!", "Alert")
             elif ((x < 1450) and (x > 1400) and (y < 150) and (y > 100)):
-                Pop.popper()
+                Pop.popper(900, 0.025)
                 try:
                     ImagePath = askopenfilename()
                     if ImagePath != '':
