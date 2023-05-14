@@ -1,4 +1,4 @@
-import pygame, pyautogui, pathlib, os, random, divrounder
+import pygame, pyautogui, pathlib, os, random, divrounder, easygui, Pop
 from tkinter.filedialog import askopenfilename
 
 pygame.init()
@@ -168,30 +168,29 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y postions of the mouse click
             x, y = event.pos
-            print(x,y)
             if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
+                Pop.popper()
                 pygame.quit()
                 quit()
             elif ((x < 1850) and (x > 1800) and (y < 50) and (y > 0)):
+                Pop.popper()
                 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
             elif ((x < 550) and (x > 500) and (y < 150) and (y > 100)):
+                Pop.popper()
                 try:
                     ImagePath = askopenfilename()
-                    if ImagePath == '':
-                        print('SIU')
-                    else:
+                    if ImagePath != '':
                         M = pygame.transform.scale((pygame.image.load(ImagePath)).convert_alpha(), M_IMAGE_SIZE) #Loads new logo
                 except pygame.error:
-                    print('SIU')
+                    easygui.msgbox("Unsupported image format!", "Alert")
             elif ((x < 1450) and (x > 1400) and (y < 150) and (y > 100)):
+                Pop.popper()
                 try:
                     ImagePath = askopenfilename()
-                    if ImagePath == '':
-                        print('SIU')
-                    else:
+                    if ImagePath != '':
                         O = pygame.transform.scale((pygame.image.load(ImagePath)).convert_alpha(), M_IMAGE_SIZE) #Loads new logo
                 except pygame.error:
-                    print('SIU')
+                    easygui.msgbox("Unsupported image format!", "Alert")
         elif event.type == pygame.KEYDOWN:
             keys = pygame.key.get_pressed()
             if event.key == pygame.K_LEFT:
