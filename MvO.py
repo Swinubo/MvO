@@ -1,4 +1,5 @@
 import pygame, pyautogui, pathlib, os, random, divrounder
+from tkinter.filedialog import askopenfilename
 
 pygame.init()
 
@@ -24,7 +25,19 @@ M = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "M.png
 O = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "O.png"))).convert_alpha(), O_IMAGE_SIZE) #Loads orlando sc logo
 Ball = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Ball.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads ball
 ExitDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Exit.png"))).convert(), SMALL_IMAGE_SIZE) #Loads exit
-ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Reset.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads exit
+ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Reset.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads reset
+ChangeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Change.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads chnage
+
+font = pygame.font.SysFont('Comic Sans M',  150)
+smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
+Home = smallfont.render('Home', True, BLACK)
+Away = smallfont.render('Away', True, BLACK)
+
+M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
+FPS = 60
+MScore, OScore = 0, 0
+OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
+clock = pygame.time.Clock()
 
 def DisplScrn():
     scrn.fill(GREEN)
@@ -46,15 +59,21 @@ def DisplScrn():
     scrn.blit(ResetDispl, (1800, 0))
     scrn.blit(font.render(str(MScore), True, BLACK),(800, 0))
     scrn.blit(font.render(str(OScore), True, BLACK),(1100, 0))
+    scrn.blit(Home, (600, 100))
+    scrn.blit(Away, (1250, 100))
+    scrn.blit(ChangeDispl, (500, 100))
+    scrn.blit(ChangeDispl, (1400, 100))
+    scrn.blit(M, (600, 0))
+    scrn.blit(O, (1200, 0))
     pygame.display.flip()
 
 def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
     if BallX < 100:
         OScore += 1
-        M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
+        M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
     if BallX > 1820:
         MScore += 1
-        M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
+        M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
     return MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY
 
 def CheckODirection(O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown):
@@ -130,19 +149,12 @@ def PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, Ball
             OutODown = True
     return M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore
 
-font = pygame.font.SysFont('Comic Sans M',  150)
-M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 400, 400, 940, 480
-FPS = 60
-MScore, OScore = 0, 0
-OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
-clock = pygame.time.Clock()
-done = False
-
 randomlistleft = RandListGenerator(100, -1000, 1000)
 randomlistright = RandListGenerator(100, 1000, 1820)
 randomlistup = RandListGenerator(100, 0, 500)
 randomlistdown = RandListGenerator(100, 500, 1020)
 
+done = False
 while not done:
 
     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
@@ -156,11 +168,30 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y postions of the mouse click
             x, y = event.pos
+            print(x,y)
             if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
                 pygame.quit()
                 quit()
-            if ((x < 1850) and (x > 1800) and (y < 50) and (y > 0)):
-                M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 500, 700, 700, 940, 480
+            elif ((x < 1850) and (x > 1800) and (y < 50) and (y > 0)):
+                M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
+            elif ((x < 550) and (x > 500) and (y < 150) and (y > 100)):
+                try:
+                    ImagePath = askopenfilename()
+                    if ImagePath == '':
+                        print('SIU')
+                    else:
+                        M = pygame.transform.scale((pygame.image.load(ImagePath)).convert_alpha(), M_IMAGE_SIZE) #Loads new logo
+                except pygame.error:
+                    print('SIU')
+            elif ((x < 1450) and (x > 1400) and (y < 150) and (y > 100)):
+                try:
+                    ImagePath = askopenfilename()
+                    if ImagePath == '':
+                        print('SIU')
+                    else:
+                        O = pygame.transform.scale((pygame.image.load(ImagePath)).convert_alpha(), M_IMAGE_SIZE) #Loads new logo
+                except pygame.error:
+                    print('SIU')
         elif event.type == pygame.KEYDOWN:
             keys = pygame.key.get_pressed()
             if event.key == pygame.K_LEFT:
