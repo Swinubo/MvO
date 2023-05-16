@@ -29,7 +29,9 @@ O = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "O.png
 Ball = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Ball.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads ball
 ExitDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Exit.png"))).convert(), SMALL_IMAGE_SIZE) #Loads exit
 ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Reset.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads reset
-ChangeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Change.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads chnage
+ChangeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Change.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads change
+NoMusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "NoMusic.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads no music
+MusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Music.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads music
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
@@ -41,6 +43,7 @@ FPS = 60
 MScore, OScore = 0, 0
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
+Music = 'On'
 clock = pygame.time.Clock()
 
 def DisplScrn():
@@ -70,6 +73,10 @@ def DisplScrn():
     scrn.blit(M, (600, 0))
     scrn.blit(O, (1200, 0))
     scrn.blit(font.render(str(round(TimePassed, 2)), True, WHITE), (840, 100))
+    if Music == 'On':
+        scrn.blit(NoMusicDispl, (1730, 0))
+    else:
+        scrn.blit(MusicDispl, (1730, 0))
     pygame.display.flip()
 
 def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
@@ -214,6 +221,14 @@ while not done:
                         O = pygame.transform.scale((pygame.image.load(ImagePath)).convert_alpha(), M_IMAGE_SIZE) #Loads new logo
                 except pygame.error:
                     easygui.msgbox("Unsupported image format!", "Alert")
+            elif ((x < 1780) and (x > 1730) and (y < 50) and (y > 0)):
+                Pop.popper(900, 0.025)
+                if Music == 'On':
+                    Music = 'Off'
+                    pygame.mixer.music.pause()
+                elif Music == 'Off':
+                    Music = 'On'
+                    pygame.mixer.music.unpause()
         elif event.type == pygame.KEYDOWN:
             keys = pygame.key.get_pressed()
             if event.key == pygame.K_LEFT:
