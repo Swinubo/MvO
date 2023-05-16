@@ -40,7 +40,7 @@ Away = smallfont.render('Away', True, BLACK)
 
 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
 FPS = 60
-MScore, OScore = 0, 0
+MScore, OScore = 0, 1
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
 Music = 'On'
@@ -172,17 +172,17 @@ while not done:
     if TimePassed > 90:
         if MScore > OScore:
             Pop.popper(900, 0.025)
-            easygui.msgbox('The home team wins!')
+            easygui.msgbox('The home team wins!', 'Woohoo!', 'Woohoo!', str(pathlib.Path(image_path, "Party Face Emoji.png")))
             M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
             TimePassed, MScore, OScore = 0, 0, 0
         elif MScore < OScore:
             Pop.popper(900, 0.025)
-            easygui.msgbox('The away team wins!')
+            easygui.msgbox('The away team wins!', 'Boohoo!', 'Boohoo!', str(pathlib.Path(image_path, "Disappointed Face Emoji.png")))
             M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
             TimePassed, MScore, OScore = 0, 0, 0
         elif MScore == OScore:
             Pop.popper(900, 0.025)
-            easygui.msgbox("It's a draw!")
+            easygui.msgbox("It's a draw!", ':/', ':/', str(pathlib.Path(image_path, "Neutral Face Emoji.png")))
             M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
             TimePassed, MScore, OScore = 0, 0, 0
 
