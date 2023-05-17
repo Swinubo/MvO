@@ -32,6 +32,8 @@ ResetDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_pat
 ChangeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Change.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads change
 NoMusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "NoMusic.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads no music
 MusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Music.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads music
+PauseDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Pause.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads pause
+PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads play
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
@@ -40,10 +42,10 @@ Away = smallfont.render('Away', True, BLACK)
 
 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
 FPS = 60
-MScore, OScore = 0, 1
+MScore, OScore = 0, 0
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
-Music = 'On'
+Music, Playing = 'On', True
 clock = pygame.time.Clock()
 
 def DisplScrn():
@@ -77,6 +79,7 @@ def DisplScrn():
         scrn.blit(NoMusicDispl, (1730, 0))
     else:
         scrn.blit(MusicDispl, (1730, 0))
+    scrn.blit(PauseDispl, (1660, 0))
     pygame.display.flip()
 
 def CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y):
@@ -229,6 +232,27 @@ while not done:
                 elif Music == 'Off':
                     Music = 'On'
                     pygame.mixer.music.unpause()
+            elif ((x < 1710) and (x > 1660) and (y < 50) and (y > 0)):
+                Pop.popper(900, 0.025)
+                if Playing == True:
+                    scrn.blit(PlayDispl, (1660, 0))   
+                    pygame.display.flip()
+                    pygame.mixer.music.pause()
+                    UnPaused = False
+                    while UnPaused == False:
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                x, y = event.pos
+                                if ((x < 1710) and (x > 1660) and (y < 50) and (y > 0)):
+                                    UnPaused = True
+                                elif ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
+                                    Pop.popper(900, 0.025)
+                                    pygame.quit()
+                                    quit()
+                            elif event.type == pygame.QUIT:
+                                Pop.popper(900, 0.025)
+                                pygame.quit()
+                                quit()
         elif event.type == pygame.KEYDOWN:
             keys = pygame.key.get_pressed()
             if event.key == pygame.K_LEFT:
