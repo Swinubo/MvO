@@ -20,10 +20,13 @@ GREEN = (0, 128,   0)
 PURPLE = (134, 19, 144)
 YELLOW = (212, 195, 27)
 BLUE = (0, 191, 255)
+DARKBLUE = (0, 0, 255)
 
 M_IMAGE_SIZE = (100, 100)
 O_IMAGE_SIZE = (200, 100)
 SMALL_IMAGE_SIZE = (50, 50)
+BIG_IMAGE_SIZE = (800, 800)
+
 M = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "M.png"))).convert_alpha(), M_IMAGE_SIZE) #Loads cf montreal logo
 O = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "O.png"))).convert_alpha(), O_IMAGE_SIZE) #Loads orlando sc logo
 Ball = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Ball.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads ball
@@ -34,6 +37,8 @@ NoMusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_p
 MusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Music.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads music
 PauseDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Pause.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads pause
 PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads play
+BotDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Bot.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads bot image
+TwoPlayersDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "TwoPlayers.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads twoplayers image
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
@@ -49,11 +54,16 @@ Music, Playing = 'On', True
 clock = pygame.time.Clock()
 
 def DisplMain():
-    scrn.fill(BLUE)
-    pygame.draw.rect(scrn, PURPLE, pygame.Rect(50, 150, 300, 700))
-    pygame.draw.rect(scrn, PURPLE, pygame.Rect(60, 160, 280, 680))
-    pygame.draw.rect(scrn, BLACK, pygame.Rect(50, 150, 300, 700))
-    pygame.draw.rect(scrn, BLACK, pygame.Rect(60, 160, 280, 680))
+    scrn.fill(DARKBLUE)
+    pygame.draw.rect(scrn, BLACK, pygame.Rect(90, 190, 820, 720)) #These two lines lines are for the first rectangle (outer black lining)
+    pygame.draw.rect(scrn, PURPLE, pygame.Rect(100, 200, 800, 700))#(Purple fill)
+
+    pygame.draw.rect(scrn, BLACK, pygame.Rect(950, 190, 820, 720)) #These two lines lines are for the second rectangle (outer black lining)
+    pygame.draw.rect(scrn, PURPLE, pygame.Rect(960, 200, 800, 700))#(Purple fill)
+
+    scrn.blit(BotDispl, (100, 250))
+    scrn.blit(TwoPlayersDispl, (950, 250))
+
     pygame.display.flip()
 
 def DisplScrn():
