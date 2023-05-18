@@ -11,7 +11,7 @@ scrn = pygame.display.set_mode((X, Y))
 current_dir = os.getcwd()
 image_path = pathlib.Path(current_dir, 'MvO Images')
 
-pygame.mixer.music.load("C:\\Users\\fmend\\Documents\\Gaspar\\Gaspar Music\\A Himitsu - Cosmic Storm.mp3")
+pygame.mixer.music.load("C:\\Users\\fmend\\Documents\\Gaspar\\Gaspar Music\\Alexandre Desplat - Courtyard Apocalypse.mp3")
 pygame.mixer.music.play()
 
 BLACK = (0,   0,   0)
