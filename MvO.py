@@ -26,6 +26,7 @@ M_IMAGE_SIZE = (100, 100)
 O_IMAGE_SIZE = (200, 100)
 SMALL_IMAGE_SIZE = (50, 50)
 BIG_IMAGE_SIZE = (800, 800)
+PLAY_IMAGE_SIZE = (428, 249)
 
 M = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "M.png"))).convert_alpha(), M_IMAGE_SIZE) #Loads cf montreal logo
 O = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "O.png"))).convert_alpha(), O_IMAGE_SIZE) #Loads orlando sc logo
@@ -39,6 +40,7 @@ PauseDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_pat
 PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads play
 BotDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Bot.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads bot image
 TwoPlayersDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "TwoPlayers.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads twoplayers image
+PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.jpg"))).convert(), PLAY_IMAGE_SIZE) #Loads play image
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
@@ -59,13 +61,14 @@ def DisplMain(NumberOfRecs):
     TopLeft_X = NumberOfRecs * 20 / 3
 
     for num in range(NumberOfRecs):
-        rect = pygame.Rect(TopLeft_X, 200, X/NumberOfRecs, 700)
+        rect = pygame.Rect(TopLeft_X, 100, X/NumberOfRecs, 700)
         pygame.draw.rect(scrn, PURPLE, rect)
 
         TopLeft_X += X/NumberOfRecs + NumberOfRecs * 20 / 3
     
-    #scrn.blit(BotDispl, (100, 250))
-    #scrn.blit(TwoPlayersDispl, (950, 250))
+    scrn.blit(BotDispl, (100, 250))
+    scrn.blit(TwoPlayersDispl, (950, 250))
+    scrn.blit(PlayDispl, (800, 820))
 
     pygame.display.flip()
 
@@ -200,7 +203,7 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y postions of the mouse click
             x, y = event.pos
-            if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
+            if ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
                 Pop.popper(900, 0.025)
                 OutOfBotGame = False
                 while OutOfBotGame == False:
@@ -427,4 +430,6 @@ while not done:
                                             BallY = divrounder.divround(BallY, 20)
                                             MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                     clock.tick(FPS)
+            elif ((x < 1920) and (x > 990) and (y < 800) and (y > 100)):
+                easygui.codebox('SIU', 'BOB', 'RUI')
         clock.tick(60)
