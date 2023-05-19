@@ -53,6 +53,7 @@ MScore, OScore = 0, 0
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
 Music, Playing = 'On', True
+MulitPlayer, Bot = False, False
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -67,7 +68,7 @@ def DisplMain(NumberOfRecs):
         TopLeft_X += X/NumberOfRecs + NumberOfRecs * 20 / 3
     
     scrn.blit(BotDispl, (100, 250))
-    scrn.blit(TwoPlayersDispl, (950, 250))
+    scrn.blit(TwoPlayersDispl, (1100, 250))
     scrn.blit(PlayDispl, (800, 820))
 
     pygame.display.flip()
@@ -203,7 +204,8 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y postions of the mouse click
             x, y = event.pos
-            if ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
+            print(x, y)
+            if ((x < 1230) and (x > 800) and (y < 1070) and (y > 820)):
                 Pop.popper(900, 0.025)
                 OutOfBotGame = False
                 while OutOfBotGame == False:
@@ -430,6 +432,10 @@ while not done:
                                             BallY = divrounder.divround(BallY, 20)
                                             MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                     clock.tick(FPS)
+            elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
+                Bot = True
+                easygui.msgbox('Bot mode selected', 'Selected', 'OK', str(pathlib.Path(image_path, "Thumbs Up Emoji.png")))
             elif ((x < 1920) and (x > 990) and (y < 800) and (y > 100)):
-                easygui.codebox('SIU', 'BOB', 'RUI')
+                MultiPlayer = True
+                easygui.msgbox('Muliplayer mode selected', 'Selected', 'OK', str(pathlib.Path(image_path, "Thumbs Up Emoji.png")))
         clock.tick(60)
