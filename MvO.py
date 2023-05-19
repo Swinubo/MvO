@@ -11,8 +11,8 @@ scrn = pygame.display.set_mode((X, Y))
 current_dir = os.getcwd()
 image_path = pathlib.Path(current_dir, 'MvO Images')
 
-#pygame.mixer.music.load(str(pathlib.Path(image_path, "Alexandre Desplat - Courtyard Apocalypse.mp3")))
-#pygame.mixer.music.play()
+pygame.mixer.music.load(str(pathlib.Path(image_path, "Alexandre Desplat - Courtyard Apocalypse.mp3")))
+pygame.mixer.music.play()
 
 BLACK = (0,   0,   0)
 WHITE = (255, 255, 255)
@@ -57,20 +57,13 @@ def DisplMain(NumberOfRecs):
     scrn.fill(DARKBLUE)
     
     TopLeft_X = NumberOfRecs * 20 / 3
-    print(X/NumberOfRecs)
-    print(X)
-    tryer = 0
+
     for num in range(NumberOfRecs):
-        tryer += 1
         rect = pygame.Rect(TopLeft_X, 200, X/NumberOfRecs, 700)
         pygame.draw.rect(scrn, PURPLE, rect)
-        pygame.display.update()
 
         TopLeft_X += X/NumberOfRecs + NumberOfRecs * 20 / 3
-
-
-    #pygame.draw.rect(scrn, BLACK, pygame.Rect(950, 190, 820, 720)) #These two lines lines are for the second rectangle (outer black lining)
-    #pygame.draw.rect(scrn, PURPLE, pygame.Rect(960, 200, 800, 700))#(Purple fill)
+    
     #scrn.blit(BotDispl, (100, 250))
     #scrn.blit(TwoPlayersDispl, (950, 250))
 
@@ -200,7 +193,7 @@ randomlistdown = RandListGenerator(100, 500, 1020)
 done = False
 while not done:
 
-    DisplMain(12)
+    DisplMain(2)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
