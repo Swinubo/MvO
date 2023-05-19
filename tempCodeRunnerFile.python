@@ -1,0 +1,53 @@
+import pygame
+
+pygame.init()
+
+# set up the window
+size = (1920, 1020)
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Filled Rectangles")
+
+# Set up colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+
+# Run until the user asks to quit
+done = False
+clock = pygame.time.Clock()
+
+# A list to store all the rectangles drawn to the screen
+rect_list = []
+
+while not done:
+    # --- Main event loop
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Create a new rectangle at the position of the mouse click
+            rect = pygame.Rect(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], 50, 50)
+            rect_list.append(rect)
+    
+    # --- Game logic should go here
+
+    # --- Drawing code should go here
+
+    # First, clear the screen to white
+    screen.fill(WHITE)
+
+    # Draw all the rectangles in the list
+    for rect in rect_list:
+        pygame.draw.rect(screen, BLACK, rect, 2)
+
+    # --- Go ahead and update the screen
+    pygame.display.flip()
+
+    # --- Limit to 60 frames per second
+    clock.tick(60)
+
+# Close the window and quit.
+pygame.quit()
