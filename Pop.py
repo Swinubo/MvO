@@ -30,3 +30,5 @@ def popper(FREQUENCY, LENGTH): #Hz, waves per second, seconds to play sound
     stream.stop_stream()
     stream.close()
     p.terminate()
+    
+    #NOTE THAT ALL THIS CODE IS NOT MINE IT WAS WRITTEN BY "Liam" ON STACK OVERFLOW AND IT WAS POSTED IN 2015 
