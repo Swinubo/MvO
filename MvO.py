@@ -37,7 +37,7 @@ ChangeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_pa
 NoMusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "NoMusic.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads no music
 MusicDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Music.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads music
 PauseDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Pause.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads pause
-PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads play
+PlayPauseDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.png"))).convert_alpha(), SMALL_IMAGE_SIZE) #Loads play
 BotDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Bot.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads bot image
 TwoPlayersDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "TwoPlayers.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads twoplayers image
 PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.jpg"))).convert(), PLAY_IMAGE_SIZE) #Loads play image
@@ -55,6 +55,7 @@ OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
 Music, Playing = 'On', True
 MultiPlayer = False
+M_x_change, M_y_change = 0, 0
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -278,7 +279,7 @@ while not done:
                             elif ((x < 1710) and (x > 1660) and (y < 50) and (y > 0)):
                                 Pop.popper(900, 0.025)
                                 if Playing == True:
-                                    scrn.blit(PlayDispl, (1660, 0))   
+                                    scrn.blit(PlayPauseDispl, (1660, 0))   
                                     pygame.display.flip()
                                     pygame.mixer.music.pause()
                                     UnPaused = False
@@ -288,6 +289,7 @@ while not done:
                                                 x, y = event.pos
                                                 if ((x < 1710) and (x > 1660) and (y < 50) and (y > 0)):
                                                     UnPaused = True
+                                                    pygame.mixer.music.unpause()
                                                 elif ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
                                                     Pop.popper(900, 0.025)
                                                     pygame.quit()
@@ -299,79 +301,43 @@ while not done:
                         elif event.type == pygame.KEYDOWN:
                             keys = pygame.key.get_pressed()
                             if event.key == pygame.K_LEFT:
-                                OutLeft = False
-                                while OutLeft == False:
-                                    M_X -= 20
-                                    if M_X < 0:
-                                        M_X = 0
-                                    if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
-                                        BallX -= 20
-                                        MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                                    TimePassed += 1/FPS
-                                    if MultiPlayer == False:
-                                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                    DisplScrn()
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.KEYUP:
-                                            if event.key == pygame.K_LEFT:
-                                                OutLeft = True
-                                    clock.tick(FPS)
+                                M_x_change = -20
+                                if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
+                                    BallX -= 20
+                                    MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                TimePassed += 1/FPS
+                                if MultiPlayer == False:
+                                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                    MScore, OScore)
                             elif event.key == pygame.K_RIGHT:
-                                OutRight = False
-                                while OutRight == False:
-                                    M_X += 20
-                                    if M_X > 1820:
-                                        M_X = 1820
-                                    if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
-                                        BallX += 20
-                                        MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
-                                    TimePassed += 1/FPS
-                                    if MultiPlayer == False:
-                                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                    DisplScrn()
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.KEYUP:
-                                            if event.key == pygame.K_RIGHT:
-                                                OutRight = True
-                                    clock.tick(FPS)
+                                M_x_change = 20
+                                if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
+                                    BallX += 20
+                                    MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                TimePassed += 1/FPS
+                                if MultiPlayer == False:
+                                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                    MScore, OScore)
                             elif event.key == pygame.K_UP:
-                                OutUp = False
-                                while OutUp == False:
-                                    M_Y -= 20
-                                    if M_Y < 0:
-                                        M_Y = 0
-                                    if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
-                                        BallY -= 20
-                                    TimePassed += 1/FPS
-                                    if MultiPlayer == False:
-                                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                    DisplScrn()
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.KEYUP:
-                                            if event.key == pygame.K_UP:
-                                                OutUp = True
-                                    clock.tick(FPS)
+                                M_y_change = -20
+                                if M_Y < 0:
+                                    M_Y = 0
+                                if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
+                                    BallY -= 20
+                                TimePassed += 1/FPS
+                                if MultiPlayer == False:
+                                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                    MScore, OScore)
                             elif event.key == pygame.K_DOWN:
-                                OutDown = False
-                                while OutDown == False:
-                                    M_Y += 20
-                                    if M_Y > 980:
-                                        M_Y = 980
-                                    if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
-                                        BallY += 20
-                                    TimePassed += 1/FPS
-                                    if MultiPlayer == False:
-                                        M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                    DisplScrn()
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.KEYUP:
-                                            if event.key == pygame.K_DOWN:
-                                                OutDown = True
-                                    clock.tick(FPS)
+                                M_y_change = 20
+                                if M_Y > 980:
+                                    M_Y = 980
+                                if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
+                                    BallY += 20
+                                TimePassed += 1/FPS
+                                if MultiPlayer == False:
+                                    M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                    MScore, OScore)
                             elif event.key == pygame.K_SPACE:
                                 if (M_X + 20 == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                                     Powering = True
@@ -507,12 +473,19 @@ while not done:
                                                 if event.key == pygame.K_d:
                                                     OutRight = True
                                         clock.tick(FPS)
-
+                        elif event.type == pygame.KEYUP:
+                            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                                M_x_change = 0
+                                M_y_change = 0
+                    M_X += M_x_change
+                    M_Y += M_y_change
                     clock.tick(FPS)
             elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
+                Pop.popper(900, 0.025)
                 MultiPlayer = False
                 easygui.msgbox('Bot mode selected', 'Selected', 'OK', str(pathlib.Path(image_path, "Thumbs Up Emoji.png")))
             elif ((x < 1920) and (x > 990) and (y < 800) and (y > 100)):
+                Pop.popper(900, 0.025)
                 MultiPlayer = True
                 easygui.msgbox('Muliplayer mode selected', 'Selected', 'OK', str(pathlib.Path(image_path, "Thumbs Up Emoji.png")))
         clock.tick(60)
