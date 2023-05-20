@@ -41,6 +41,7 @@ PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path
 BotDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Bot.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads bot image
 TwoPlayersDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "TwoPlayers.png"))).convert_alpha(), BIG_IMAGE_SIZE) #Loads twoplayers image
 PlayDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Play.jpg"))).convert(), PLAY_IMAGE_SIZE) #Loads play image
+HomeDispl = pygame.transform.scale(pygame.image.load(str(pathlib.Path(image_path, "Home.png"))).convert(), SMALL_IMAGE_SIZE) #Loads home image
 
 font = pygame.font.SysFont('Comic Sans M',  150)
 smallfont = pygame.font.SysFont('lucidasanstypewriter',  50)
@@ -53,6 +54,7 @@ MScore, OScore = 0, 0
 OutOLeft, OutORight, OutOUp, OutODown = True, True, True, True
 TimePassed = 0
 Music, Playing = 'On', True
+MultiPlayer = False
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -69,6 +71,7 @@ def DisplMain(NumberOfRecs):
     scrn.blit(BotDispl, (100, 250))
     scrn.blit(TwoPlayersDispl, (1100, 250))
     scrn.blit(PlayDispl, (800, 820))
+    scrn.blit(ExitDispl, (1870, 0))
 
     pygame.display.flip()
 
@@ -88,7 +91,7 @@ def DisplScrn():
     scrn.blit(M, (M_X, M_Y))
     scrn.blit(O, (O_X, O_Y))
     scrn.blit(Ball, (BallX, BallY))
-    scrn.blit(ExitDispl, (1870, 0))
+    scrn.blit(HomeDispl, (1870, 0))
     scrn.blit(ResetDispl, (1800, 0))
     scrn.blit(font.render(str(MScore), True, BLACK),(800, 0))
     scrn.blit(font.render(str(OScore), True, BLACK),(1100, 0))
@@ -203,7 +206,10 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y postions of the mouse click
             x, y = event.pos
-            print(x, y)
+            if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
+                Pop.popper(900, 0.025)
+                pygame.quit()
+                quit()
             if ((x < 1230) and (x > 800) and (y < 1070) and (y > 820)):
                 Pop.popper(900, 0.025)
                 OutOfGame = False
@@ -239,8 +245,8 @@ while not done:
                             x, y = event.pos
                             if ((x < 1920) and (x > 1870) and (y < 50) and (y > 0)):
                                 Pop.popper(900, 0.025)
-                                pygame.quit()
-                                quit()
+                                OutOfGame = True
+                                M_X, M_Y, O_X, O_Y, BallX, BallY, Time, MScore, OScore = 500, 480, 1380, 480, 940, 480, 0, 0, 0
                             elif ((x < 1850) and (x > 1800) and (y < 50) and (y > 0)):
                                 Pop.popper(900, 0.025)
                                 M_X, M_Y, O_X, O_Y, BallX, BallY = 500, 480, 1380, 480, 940, 480
@@ -504,7 +510,7 @@ while not done:
 
                     clock.tick(FPS)
             elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
-                Bot = True
+                MultiPlayer = False
                 easygui.msgbox('Bot mode selected', 'Selected', 'OK', str(pathlib.Path(image_path, "Thumbs Up Emoji.png")))
             elif ((x < 1920) and (x > 990) and (y < 800) and (y > 100)):
                 MultiPlayer = True
