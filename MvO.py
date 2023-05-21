@@ -56,6 +56,7 @@ TimePassed = 0
 Music, Playing = 'On', True
 MultiPlayer = False
 M_x_change, M_y_change, O_x_change, O_y_change = 0, 0, 0, 0
+CurrentDirection = ''
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -192,6 +193,33 @@ def PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, Ball
             OutODown = True
     return M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore
 
+def LimitChecks(CoordinateMain, CoordinateSecondary, BallCoordinateMain, BallCoordinateSecondary, Sign):
+    if Sign == 'Up':
+        if CurrentDirection == 'Up':
+            if CoordinateMain < 0:
+                CoordinateMain = 0
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain -= 20
+    elif Sign == 'Left':
+        if CurrentDirection == 'Left':
+            if CoordinateMain < 0:
+                CoordinateMain = 0
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain -= 20        
+    elif Sign == 'Right':
+        if CurrentDirection == 'Right':
+            if CoordinateMain > 1820:
+                CoordinateMain = 1820
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain += 20
+    elif Sign == 'Down':
+        if CurrentDirection == 'Down':
+            if CoordinateMain > 980:
+                CoordinateMain = 980
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain += 20
+    return CoordinateMain, BallCoordinateMain
+
 randomlistleft = RandListGenerator(100, -1000, 1000)
 randomlistright = RandListGenerator(100, 1000, 1820)
 randomlistup = RandListGenerator(100, 0, 500)
@@ -301,6 +329,7 @@ while not done:
                         elif event.type == pygame.KEYDOWN:
                             keys = pygame.key.get_pressed()
                             if event.key == pygame.K_LEFT:
+                                CurrentDirection = 'Left'
                                 M_x_change = -20
                                 if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                                     BallX -= 20
@@ -311,26 +340,22 @@ while not done:
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_RIGHT:
                                 M_x_change = 20
-                                if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
-                                    BallX += 20
-                                    MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                CurrentDirection = 'Right'
+                                MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_UP:
+                                CurrentDirection = 'Up'
                                 M_y_change = -20
-                                if M_Y < 0:
-                                    M_Y = 0
-                                print(M_Y)
-                                if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
-                                    BallY -= 20
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_DOWN:
                                 M_y_change = 20
+                                CurrentDirection = 'Down'
                                 if M_Y > 980:
                                     M_Y = 980
                                 if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
@@ -414,20 +439,12 @@ while not done:
 
                             if MultiPlayer == True:
                                 if event.key == pygame.K_w:
-                                    OutUp = False
-                                    while OutUp == False:
-                                        O_x_change = -20
-                                        if O_Y < 0:
-                                            O_Y = 0
-                                        if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
-                                            BallY -= 20
-                                        TimePassed += 1/FPS
-                                        DisplScrn()
-                                        for event in pygame.event.get():
-                                            if event.type == pygame.KEYUP:
-                                                if event.key == pygame.K_w:
-                                                    OutUp = True
-                                        clock.tick(FPS)
+                                    O_y_change = -20
+                                    if O_Y < 0:
+                                        O_Y = 0
+                                    if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
+                                        BallY -= 20
+                                    TimePassed += 1/FPS
                                 elif event.key == pygame.K_s:
                                     O_y_change = 20
                                     if O_Y > 980:
@@ -455,10 +472,18 @@ while not done:
                             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                                 M_x_change = 0
                                 M_y_change = 0
+                            elif event.key == pygame.K_w or event.key == pygame.K_a or event.key == pygame.K_s or event.key == pygame.K_d:
+                                O_x_change = 0
+                                O_y_change = 0
                     M_X += M_x_change
                     M_Y += M_y_change
                     O_X += O_x_change
                     O_Y += O_y_change
+                    M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Left')
+                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Right')
+                    M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Right')
+                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Down')
+                    MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                     clock.tick(FPS)
             elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
                 Pop.popper(900, 0.025)
