@@ -56,7 +56,7 @@ TimePassed = 0
 Music, Playing = 'On', True
 MultiPlayer = False
 M_x_change, M_y_change, O_x_change, O_y_change = 0, 0, 0, 0
-CurrentDirection = ''
+CurrentDirection, ODirection = '', ''
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -214,6 +214,30 @@ def LimitChecks(CoordinateMain, CoordinateSecondary, BallCoordinateMain, BallCoo
                 BallCoordinateMain += 20
     elif Sign == 'Down':
         if CurrentDirection == 'Down':
+            if CoordinateMain > 980:
+                CoordinateMain = 980
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain += 20
+    elif Sign == 'OUp':
+        if ODirection == 'OUp':
+            if CoordinateMain < 0:
+                CoordinateMain = 0
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain -= 20
+    elif Sign == 'OLeft':
+        if ODirection == 'OLeft':
+            if CoordinateMain < 0:
+                CoordinateMain = 0
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain -= 20        
+    elif Sign == 'ORight':
+        if ODirection == 'ORight':
+            if CoordinateMain > 1820:
+                CoordinateMain = 1820
+            if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
+                BallCoordinateMain += 20
+    elif Sign == 'ODown':
+        if ODirection == 'ODown':
             if CoordinateMain > 980:
                 CoordinateMain = 980
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
@@ -440,6 +464,7 @@ while not done:
                             if MultiPlayer == True:
                                 if event.key == pygame.K_w:
                                     O_y_change = -20
+                                    ODirection = 'OUp'
                                     if O_Y < 0:
                                         O_Y = 0
                                     if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
@@ -447,6 +472,7 @@ while not done:
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_s:
                                     O_y_change = 20
+                                    ODirection = 'ODown'
                                     if O_Y > 980:
                                         O_Y = 980
                                     if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
@@ -454,6 +480,7 @@ while not done:
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_a:
                                     O_x_change = -20
+                                    ODirection = 'OLeft'
                                     if O_X < 0:
                                         M_X = 0
                                     if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
@@ -462,6 +489,7 @@ while not done:
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_d:
                                     O_x_change = 20
+                                    ODirection = 'ORight'
                                     if O_X > 1820:
                                         O_X = 1820
                                     if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
@@ -483,6 +511,10 @@ while not done:
                     M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Up')
                     M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Right')
                     M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Down')
+                    O_X, BallX = LimitChecks(O_X, O_Y, BallX, BallY, 'OLeft')
+                    O_Y, BallY = LimitChecks(O_Y, O_X, BallY, BallX, 'OUp')
+                    O_X, BallX = LimitChecks(O_X, O_Y, BallX, BallY, 'ORight')
+                    O_Y, BallY = LimitChecks(O_Y, O_X, BallY, BallX, 'ODown')
                     MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                     clock.tick(FPS)
             elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
