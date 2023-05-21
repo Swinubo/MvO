@@ -480,7 +480,7 @@ while not done:
                     O_X += O_x_change
                     O_Y += O_y_change
                     M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Left')
-                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Right')
+                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Up')
                     M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Right')
                     M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Down')
                     MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
