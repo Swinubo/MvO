@@ -56,7 +56,7 @@ TimePassed = 0
 Music, Playing = 'On', True
 MultiPlayer = False
 M_x_change, M_y_change, O_x_change, O_y_change = 0, 0, 0, 0
-CurrentDirection, ODirection = '', ''
+CurrentDirection, ODirection, Possession = '', '', ''
 clock = pygame.time.Clock()
 
 def DisplMain(NumberOfRecs):
@@ -193,56 +193,64 @@ def PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, Ball
             OutODown = True
     return M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore
 
-def LimitChecks(CoordinateMain, CoordinateSecondary, BallCoordinateMain, BallCoordinateSecondary, Sign):
+def LimitChecks(CoordinateMain, CoordinateSecondary, BallCoordinateMain, BallCoordinateSecondary, Sign, Possession):
     if Sign == 'Up':
         if CurrentDirection == 'Up':
             if CoordinateMain < 0:
                 CoordinateMain = 0
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain -= 20
+                Possession = 'M'
     elif Sign == 'Left':
         if CurrentDirection == 'Left':
             if CoordinateMain < 0:
                 CoordinateMain = 0
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
-                BallCoordinateMain -= 20        
+                BallCoordinateMain -= 20
+                Possession = 'M'    
     elif Sign == 'Right':
         if CurrentDirection == 'Right':
             if CoordinateMain > 1820:
                 CoordinateMain = 1820
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain += 20
+                Possession = 'M'
     elif Sign == 'Down':
         if CurrentDirection == 'Down':
             if CoordinateMain > 980:
                 CoordinateMain = 980
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain += 20
+                Possession = 'M'
     elif Sign == 'OUp':
         if ODirection == 'OUp':
             if CoordinateMain < 0:
                 CoordinateMain = 0
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain -= 20
+                Possession = 'O'
     elif Sign == 'OLeft':
         if ODirection == 'OLeft':
             if CoordinateMain < 0:
                 CoordinateMain = 0
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
-                BallCoordinateMain -= 20        
+                BallCoordinateMain -= 20
+                Possession = 'O'
     elif Sign == 'ORight':
         if ODirection == 'ORight':
             if CoordinateMain > 1820:
                 CoordinateMain = 1820
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain += 20
+                Possession = 'O'
     elif Sign == 'ODown':
         if ODirection == 'ODown':
             if CoordinateMain > 980:
                 CoordinateMain = 980
             if (CoordinateMain == BallCoordinateMain) and ((CoordinateSecondary + 100 > BallCoordinateSecondary) and (CoordinateSecondary - 50 < BallCoordinateSecondary)):
                 BallCoordinateMain += 20
-    return CoordinateMain, BallCoordinateMain
+                Possession = 'O'
+    return CoordinateMain, BallCoordinateMain, Possession
 
 randomlistleft = RandListGenerator(100, -1000, 1000)
 randomlistright = RandListGenerator(100, 1000, 1820)
@@ -355,17 +363,13 @@ while not done:
                             if event.key == pygame.K_LEFT:
                                 CurrentDirection = 'Left'
                                 M_x_change = -20
-                                if (M_X == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
-                                    BallX -= 20
-                                    MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_RIGHT:
                                 M_x_change = 20
-                                CurrentDirection = 'Right'
-                                MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                CurrentDirection= 'Right'
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
@@ -379,48 +383,79 @@ while not done:
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_DOWN:
                                 M_y_change = 20
-                                CurrentDirection = 'Down'
-                                if M_Y > 980:
-                                    M_Y = 980
-                                if (M_Y == BallY) and ((M_X + 100 > BallX) and (M_X - 50 < BallX)):
-                                    BallY += 20
+                                CurrentDirectionn = 'Down'
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_SPACE:
-                                if (M_X + 20 == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
-                                    Powering = True
-                                    SecondsPassed = 0
-                                    while Powering == True:
-                                        SecondsPassed += 1/FPS
-                                        TimePassed += 1/FPS
-                                        if MultiPlayer == False:
-                                            M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                        DisplScrn()
-                                        for event in pygame.event.get():
-                                            if event.type == pygame.KEYUP:
-                                                if event.key == pygame.K_SPACE:
-                                                    Powering = False
-                                        clock.tick(FPS)
-                                    OutShot = False
-                                    try:
-                                        RandomLimit = random.randint(M_X, 1920)
-                                    except ValueError:
-                                        OutShot = True
-                                    while OutShot == False:
-                                        BallX += 27 * SecondsPassed
-                                        TimePassed += 1/FPS
-                                        if MultiPlayer == False:
-                                            M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
-                                                                                                                        MScore, OScore)
-                                        DisplScrn()
-                                        clock.tick(FPS)
-                                        if BallX > RandomLimit:
+                                if Possession == 'M':
+                                    if (M_X + 20 == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
+                                        Powering = True
+                                        SecondsPassed = 0
+                                        while Powering == True:
+                                            SecondsPassed += 1/FPS
+                                            TimePassed += 1/FPS
+                                            if MultiPlayer == False:
+                                                M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                            MScore, OScore)
+                                            DisplScrn()
+                                            for event in pygame.event.get():
+                                                if event.type == pygame.KEYUP:
+                                                    if event.key == pygame.K_SPACE:
+                                                        Powering = False
+                                            clock.tick(FPS)
+                                        OutShot = False
+                                        try:
+                                            RandomLimit = random.randint(M_X, 1920)
+                                        except ValueError:
                                             OutShot = True
-                                            BallX = divrounder.divround(BallX, 20)
-                                            MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                        while OutShot == False:
+                                            BallX += 27 * SecondsPassed
+                                            TimePassed += 1/FPS
+                                            if MultiPlayer == False:
+                                                M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                            MScore, OScore)
+                                            DisplScrn()
+                                            clock.tick(FPS)
+                                            if BallX > RandomLimit:
+                                                OutShot = True
+                                                BallX = divrounder.divround(BallX, 20)
+                                                MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+                                elif Possession == 'O':
+                                    if (O_X - 20 == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
+                                        Powering = True
+                                        SecondsPassed = 0
+                                        while Powering == True:
+                                            SecondsPassed += 1/FPS
+                                            TimePassed += 1/FPS
+                                            if MultiPlayer == False:
+                                                M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                            MScore, OScore)
+                                            DisplScrn()
+                                            for event in pygame.event.get():
+                                                if event.type == pygame.KEYUP:
+                                                    if event.key == pygame.K_SPACE:
+                                                        Powering = False
+                                            clock.tick(FPS)
+                                        OutShot = False
+                                        try:
+                                            RandomLimit = random.randint(0, O_X)
+                                        except ValueError:
+                                            OutShot = True
+                                        while OutShot == False:
+                                            BallX -= 27 * SecondsPassed
+                                            TimePassed += 1/FPS
+                                            if MultiPlayer == False:
+                                                M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
+                                                                                                                            MScore, OScore)
+                                            DisplScrn()
+                                            clock.tick(FPS)
+                                            if BallX < RandomLimit:
+                                                OutShot = True
+                                                BallX = divrounder.divround(BallX, 20)
+                                                MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
+
                             elif keys[pygame.K_SPACE] and keys[pygame.K_LSHIFT]:
                                 if (M_X + 20 == BallX) and ((M_Y + 100 > BallY) and (M_Y - 50 < BallY)):
                                     Powering = True
@@ -507,14 +542,14 @@ while not done:
                     M_Y += M_y_change
                     O_X += O_x_change
                     O_Y += O_y_change
-                    M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Left')
-                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Up')
-                    M_X, BallX = LimitChecks(M_X, M_Y, BallX, BallY, 'Right')
-                    M_Y, BallY = LimitChecks(M_Y, M_X, BallY, BallX, 'Down')
-                    O_X, BallX = LimitChecks(O_X, O_Y, BallX, BallY, 'OLeft')
-                    O_Y, BallY = LimitChecks(O_Y, O_X, BallY, BallX, 'OUp')
-                    O_X, BallX = LimitChecks(O_X, O_Y, BallX, BallY, 'ORight')
-                    O_Y, BallY = LimitChecks(O_Y, O_X, BallY, BallX, 'ODown')
+                    M_X, BallX, Possession = LimitChecks(M_X, M_Y, BallX, BallY, 'Left', Possession)
+                    M_Y, BallY, Possession = LimitChecks(M_Y, M_X, BallY, BallX, 'Up', Possession)
+                    M_X, BallX, Possession = LimitChecks(M_X, M_Y, BallX, BallY, 'Right', Possession)
+                    M_Y, BallY, Possession = LimitChecks(M_Y, M_X, BallY, BallX, 'Down', Possession)
+                    O_X, BallX, Possession = LimitChecks(O_X, O_Y, BallX, BallY, 'OLeft', Possession)
+                    O_Y, BallY, Possession = LimitChecks(O_Y, O_X, BallY, BallX, 'OUp', Possession)
+                    O_X, BallX, Possession = LimitChecks(O_X, O_Y, BallX, BallY, 'ORight', Possession)
+                    O_Y, BallY, Possession = LimitChecks(O_Y, O_X, BallY, BallX, 'ODown', Possession)
                     MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                     clock.tick(FPS)
             elif ((x < 970) and (x > 10) and (y < 800) and (y > 100)):
