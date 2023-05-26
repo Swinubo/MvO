@@ -500,36 +500,18 @@ while not done:
                                 if event.key == pygame.K_w:
                                     O_y_change = -20
                                     ODirection = 'OUp'
-                                    if O_Y < 0:
-                                        O_Y = 0
-                                    if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
-                                        BallY -= 20
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_s:
                                     O_y_change = 20
                                     ODirection = 'ODown'
-                                    if O_Y > 980:
-                                        O_Y = 980
-                                    if (O_Y == BallY) and ((O_X + 100 > BallX) and (O_X - 50 < BallX)):
-                                        BallY += 20
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_a:
                                     O_x_change = -20
                                     ODirection = 'OLeft'
-                                    if O_X < 0:
-                                        M_X = 0
-                                    if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
-                                        BallX -= 20
-                                        MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                                     TimePassed += 1/FPS
                                 elif event.key == pygame.K_d:
                                     O_x_change = 20
                                     ODirection = 'ORight'
-                                    if O_X > 1820:
-                                        O_X = 1820
-                                    if (O_X == BallX) and ((O_Y + 100 > BallY) and (O_Y - 50 < BallY)):
-                                        BallX += 20
-                                        MScore, OScore, M_X, M_Y, O_X, O_Y, BallX, BallY = CheckInNet(MScore, OScore, BallX, BallY, M_X, M_Y, O_X, O_Y)
                                     TimePassed += 1/FPS
                         elif event.type == pygame.KEYUP:
                             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
