@@ -257,7 +257,7 @@ randomlistright = RandListGenerator(100, 1000, 1820)
 randomlistup = RandListGenerator(100, 0, 500)
 randomlistdown = RandListGenerator(100, 500, 1020)
 
-done = False
+done = False #RANDOM COMMENT TO CHECK IF GIT COMMITS WORK EVEN AFTER 8 MONTHS
 while not done:
 
     DisplMain(2)
