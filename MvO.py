@@ -383,7 +383,7 @@ while not done:
                                                                                                                     MScore, OScore)
                             elif event.key == pygame.K_DOWN:
                                 M_y_change = 20
-                                CurrentDirectionn = 'Down'
+                                CurrentDirection = 'Down'
                                 TimePassed += 1/FPS
                                 if MultiPlayer == False:
                                     M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, MScore, OScore = PosOGenrater(M_X, M_Y, O_X, O_Y, OutOLeft, OutORight, OutOUp, OutODown, BallX, BallY, 
